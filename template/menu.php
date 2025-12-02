@@ -22,7 +22,9 @@
         </li>
       </ul>
       <div class="d-flex">
-      <a href="logout.php" class="btn btn-danger"> ออกจากระบบ </a>
+      <form action="logout.php" method="post" style="margin: 0;">
+      <button type="submit" class="btn btn-danger">ออกจากระบบ</button>
+      </form>
       </div>
     </div>
     </div>

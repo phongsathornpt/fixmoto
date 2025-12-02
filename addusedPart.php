@@ -42,9 +42,10 @@
     if(isset($_GET['partnumber'])){
         $partnumber = $_GET['partnumber'];
         $fix_id = intval($_GET['fix_id']);
-        if(count($oBj->checkPartuse($partnumber)) == 0 ){
+        $partResult = $oBj->checkPartuse($partnumber);
+        if(count($partResult) == 0 ){
             echo "<div class='alert alert-warning mt-3'>อะไหล่ถูกใช้แล้ว หรือไม่พบอะไหล่</div>";
-        }else if(count($oBj->checkPartuse($partnumber)) >= 1 ){
+        }else if(count($partResult) >= 1 ){
             echo "<div class='alert alert-success mt-3'>" . htmlspecialchars($oBj->addFixuse($partnumber, $fix_id), ENT_QUOTES, 'UTF-8') . "</div>";
             echo "<div class='alert alert-info mt-2'>" . htmlspecialchars($oBj->setStatuspart($partnumber), ENT_QUOTES, 'UTF-8') . "</div>";
             echo "<div class='alert alert-info mt-2'>" . htmlspecialchars($oBj->updateStockfixuser($partnumber), ENT_QUOTES, 'UTF-8') . "</div>";

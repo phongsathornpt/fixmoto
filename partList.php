@@ -54,7 +54,8 @@
     </thead>
     <tbody>         
     " ;
-    for($i = 0 ; $i < count($data) ; $i++){
+    $dataCount = count($data);
+    for($i = 0 ; $i < $dataCount ; $i++){
         echo "
         <tr>
             <td>

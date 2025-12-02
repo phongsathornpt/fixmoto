@@ -52,7 +52,8 @@ echo '
 ';
 $datafix = $oBj->showFixlist();
 if(!empty($datafix)){
-for($i = 0; count($datafix) > $i ; $i++){
+$datafixCount = count($datafix);
+for($i = 0; $i < $datafixCount ; $i++){
     $statusbyFixid = $oBj->getStatusbyfixid($datafix[$i]['fix_id']);
     echo "
     <tr>

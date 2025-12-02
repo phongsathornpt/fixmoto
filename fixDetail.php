@@ -55,7 +55,8 @@ if(isset($_GET['fix_id'])){
 $datafix = $oBj->showFixlistbyid($fix_id);
 $fixDetail = $oBj->usePart($fix_id);
 if(!empty($datafix)){
-for($i = 0; count($datafix) > $i ; $i++){
+$datafixCount = count($datafix);
+for($i = 0; $i < $datafixCount ; $i++){
     $statusbyFixid = $oBj->getStatusbyfixid($datafix[$i]['fix_id']);
     echo "
     <tr>
@@ -104,7 +105,8 @@ echo "
 if(count($fixDetail) == 0){
   echo "<tr><td colspan='2' class='text-center'>ยังไม่ได้อัพเดทรายการใช้อะไหล่</td></tr>";
 }else{
-  for($i = 0 ; count($fixDetail) > $i ; $i++){
+  $fixDetailCount = count($fixDetail);
+  for($i = 0 ; $i < $fixDetailCount ; $i++){
     echo "
     <tr>
       <td>

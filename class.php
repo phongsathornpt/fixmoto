@@ -175,7 +175,7 @@
                 $pdo->commit();
                 return 'เพิ่มเรียบร้อยแล้ว';
             } catch (PDOException $e) {
-                $this->db_con()->rollBack();
+                $pdo->rollBack();
                 return 'มีปัญหา: ' . $e->getMessage();
             }
         }
