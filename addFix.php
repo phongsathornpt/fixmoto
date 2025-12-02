@@ -5,9 +5,6 @@
     .bd-placeholder-img {
       font-size: 1.125rem;
       text-anchor: middle;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
       user-select: none;
     }
 
@@ -16,9 +13,11 @@
         font-size: 3.5rem;
       }
     }
+    .starter-template {
+      padding: 3rem 1.5rem;
+      text-align: center;
+    }
   </style>
-  <!-- Custom styles for this template -->
-  <link href="//getbootstrap.com/docs/4.4/examples/starter-template/starter-template.css" rel="stylesheet">
     </head>
     <body>
 
@@ -26,14 +25,14 @@
 include('template/menu.php');
 
 echo '
-<main role="main" class="container">
+<main role="main" class="container" style="margin-top: 60px;">
 
 <div class="starter-template">
 
 
-<a href="addFixNewcus.php" <button class="btn btn-success my-2 my-sm-0">ลูกค้าไหม่ </button> </a>
+<a href="addFixNewcus.php" class="btn btn-success btn-lg me-2">ลูกค้าไหม่</a>
 
-<a href="addFixOldcus.php" <button class="btn btn-info my-2 my-sm-0">ลูกค้าเก่า </button> </a>
+<a href="addFixOldcus.php" class="btn btn-info btn-lg">ลูกค้าเก่า</a>
     
 
 

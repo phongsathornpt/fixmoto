@@ -7,9 +7,6 @@
     .bd-placeholder-img {
       font-size: 1.125rem;
       text-anchor: middle;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
       user-select: none;
     }
 
@@ -18,9 +15,10 @@
         font-size: 3.5rem;
       }
     }
+    .starter-template {
+      padding: 3rem 1.5rem;
+    }
   </style>
-  <!-- Custom styles for this template -->
-  <link href="//getbootstrap.com/docs/4.4/examples/starter-template/starter-template.css" rel="stylesheet">
     </head>
     <body>
 
@@ -28,7 +26,7 @@
 include('template/menu.php');
 
 echo '
-<main role="main" class="container">
+<main role="main" class="container" style="margin-top: 60px;">
 
 <div class="starter-template">
 
@@ -37,39 +35,52 @@ echo '
 <div class="starter-template">
 
 <h1>รายการซ่อม</h1>
-<table>
+<div class="table-responsive">
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
     <tr>
-        <td>หมายเลขงานซ่อม</td>
-        <td>หมายเลขลูกค้า</td>
-        <td>ยี่ห้อรถ</td>
-        <td>ป้ายทะเบียน</td>
-        <td>รายระเอียด</td>
-        <td>สถานะ</td>
+        <th>หมายเลขงานซ่อม</th>
+        <th>หมายเลขลูกค้า</th>
+        <th>ยี่ห้อรถ</th>
+        <th>ป้ายทะเบียน</th>
+        <th>รายระเอียด</th>
+        <th>สถานะ</th>
+        <th>จัดการ</th>
     </tr>
+    </thead>
+    <tbody>
 ';
 $datafix = $oBj->showFixlist();
+if(!empty($datafix)){
 for($i = 0; count($datafix) > $i ; $i++){
     $statusbyFixid = $oBj->getStatusbyfixid($datafix[$i]['fix_id']);
     echo "
     <tr>
-        <td> ".$datafix[$i]['fix_id']." </td>
-        <td> ".$datafix[$i]['customer_id']." </td>
-        <td> ".$datafix[$i]['brand']." </td>
-        <td> ".$datafix[$i]['plate']." </td>
-        <td> ".$datafix[$i]['fix_detail']." </td>
-        <td> ".$statusbyFixid[0]['fix_detail']." </td>
-        <td>  <a href='fixDetail.php?fix_id=".$datafix[$i]['fix_id']."'>
+        <td> " . htmlspecialchars($datafix[$i]['fix_id'], ENT_QUOTES, 'UTF-8') . " </td>
+        <td> " . htmlspecialchars($datafix[$i]['customer_id'], ENT_QUOTES, 'UTF-8') . " </td>
+        <td> " . htmlspecialchars($datafix[$i]['brand'], ENT_QUOTES, 'UTF-8') . " </td>
+        <td> " . htmlspecialchars($datafix[$i]['plate'], ENT_QUOTES, 'UTF-8') . " </td>
+        <td> " . htmlspecialchars($datafix[$i]['fix_detail'], ENT_QUOTES, 'UTF-8') . " </td>
+        <td> " . htmlspecialchars($statusbyFixid[0]['fix_detail'] ?? '', ENT_QUOTES, 'UTF-8') . " </td>
+        <td>  <a href='fixDetail.php?fix_id=" . htmlspecialchars($datafix[$i]['fix_id'], ENT_QUOTES, 'UTF-8') . "'>
     ";
     if($oBj->checkStatusFix($datafix[$i]['fix_id']) != 'ซ่อมเรียบร้อย'){
       echo "
-      <button class='btn-small btn-danger my-2 my-sm-0'> อัพเดทงานซ่อม </button> </a></td>
+      <button class='btn btn-sm btn-danger'> อัพเดทงานซ่อม </button> </a></td>
         
       </tr>
       ";
+    } else {
+      echo "</a></td></tr>";
     }
 };
-
+}
 echo'
+</tbody>
+</table>
+</div>
+</div>
+</div>
 </main>
 </body>
 </html>

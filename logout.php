@@ -1,7 +1,6 @@
 <?php
-include('template/header.php');
-
-if(session_destroy()){
-    Header("Location: index.php");
-}
+session_start();
+session_destroy();
+header("Location: index.php");
+exit;
 ?>

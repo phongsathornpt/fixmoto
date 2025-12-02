@@ -3,7 +3,7 @@
     $oBj = new Main;
     $buyid = 0;
     if(isset($_GET['buyid'])){
-        $buyid = $_GET['buyid'];
+        $buyid = intval($_GET['buyid']);
     };
     $data = $oBj->detailBill($buyid);
     include('template/header.php');
@@ -13,9 +13,6 @@
     .bd-placeholder-img {
       font-size: 1.125rem;
       text-anchor: middle;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
       user-select: none;
     }
 
@@ -24,120 +21,104 @@
         font-size: 3.5rem;
       }
     }
+    .starter-template {
+      padding: 3rem 1.5rem;
+    }
   </style>
-  <!-- Custom styles for this template -->
-  <link href="//getbootstrap.com/docs/4.4/examples/starter-template/starter-template.css" rel="stylesheet">
     </head>
     <body>
 
 ';
-    echo '<main role="main" class="container">
+    echo '<main role="main" class="container" style="margin-top: 60px;">
     <div class="starter-template">';
     include('template/menuPart.php');
     echo "
     <br>
-    <h1> รายการใบสั่งซื้อ </h1>
+    <h1>รายการใบสั่งซื้อ</h1>
     <hr>
 ";
 if($buyid != 0){
     echo "
-    <table>
-    <tr style='background-color:lightblue'>
-        <td>
-            ใบสั่งซื้อเลขที่ " . $buyid . " "  . $oBj->getStatusPo($buyid) . "
-        </td>
-        
-    </tr>
-    <tr>
-        <td>
-            <table width='100%'>
-                <tr>
-                    <td>
-                        ผู้ขาย " . $oBj->getNameSupplier($buyid) . "
-                    </td>
-                    <td>
-                        วันที่ออก " . $oBj->getDatebuy($buyid) . "
-                    </td>
-                    <td>
-                        ยอดรวมสุทธิ " . $oBj->costPo($buyid) . " บาท
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <table width='100%'>
-                <tr>
-                    <td>รหัสสินค้า</td>
-                    <td>ชื่อสินค้า</td>
-                    <td>จำนวน</td>
-                    <td style='text-align: right;'>ราคา</td>
-                </tr>
+    <div class='card'>
+    <div class='card-header bg-info text-white'>
+        ใบสั่งซื้อเลขที่ " . htmlspecialchars($buyid, ENT_QUOTES, 'UTF-8') . " - "  . htmlspecialchars($oBj->getStatusPo($buyid), ENT_QUOTES, 'UTF-8') . "
+    </div>
+    <div class='card-body'>
+        <div class='row mb-3'>
+            <div class='col-md-4'>
+                <strong>ผู้ขาย:</strong> " . htmlspecialchars($oBj->getNameSupplier($buyid), ENT_QUOTES, 'UTF-8') . "
+            </div>
+            <div class='col-md-4'>
+                <strong>วันที่ออก:</strong> " . htmlspecialchars($oBj->getDatebuy($buyid), ENT_QUOTES, 'UTF-8') . "
+            </div>
+            <div class='col-md-4'>
+                <strong>ยอดรวมสุทธิ:</strong> " . htmlspecialchars($oBj->costPo($buyid), ENT_QUOTES, 'UTF-8') . " บาท
+            </div>
+        </div>
+        <div class='table-responsive'>
+        <table class='table table-striped'>
+            <thead class='table-dark'>
+            <tr>
+                <th>รหัสสินค้า</th>
+                <th>ชื่อสินค้า</th>
+                <th>จำนวน</th>
+                <th class='text-end'>ราคา</th>
+            </tr>
+            </thead>
+            <tbody>
     ";
     for($i = 0 ; count($data) > $i ; $i++){
     echo "
         <tr>
-        <td>" . $data[$i]['part_id'] ."</td>
-        <td>" . $data[$i]['part_desc'] ."</td>
-        <td>" . $data[$i]['order_amount'] ."</td>
-        <td style='text-align: right;'>" . $data[$i]['(order_amount * part_list.part_cost)'] ."</td>
+        <td>" . htmlspecialchars($data[$i]['part_id'], ENT_QUOTES, 'UTF-8') . "</td>
+        <td>" . htmlspecialchars($data[$i]['part_desc'], ENT_QUOTES, 'UTF-8') . "</td>
+        <td>" . htmlspecialchars($data[$i]['order_amount'], ENT_QUOTES, 'UTF-8') . "</td>
+        <td class='text-end'>" . htmlspecialchars($data[$i]['total_cost'], ENT_QUOTES, 'UTF-8') . "</td>
         </tr>
     ";
     }
     echo "
-            </table>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <table width='100%'>
-                <tr>
-                    <td style='text-align: right;'>
-                        <b>ยอดรวมสุทธิ</b>
-                        <br>
-                        " . $oBj->costPo($buyid) . " บาท
-                        <br>
+            </tbody>
+        </table>
+        </div>
+        <div class='text-end'>
+            <h5>ยอดรวมสุทธิ: " . htmlspecialchars($oBj->costPo($buyid), ENT_QUOTES, 'UTF-8') . " บาท</h5>
     ";
     if($oBj->checkPay($buyid) == 0){
         echo "
-            <form action='' method='POST'>
-                <input type='text' name='idtoupdate' value='".$buyid."' hidden>
-                <input type='submit' value='ชำระค่าบริการ'>
+            <form action='' method='POST' class='d-inline'>
+                <input type='hidden' name='idtoupdate' value='" . htmlspecialchars($buyid, ENT_QUOTES, 'UTF-8') . "'>
+                <button type='submit' class='btn btn-primary'>ชำระค่าบริการ</button>
             </form>            
         ";
     }else if($oBj->getStatusPo($buyid) == "รออนุมัติ"){
         echo "
-        ชำระค่าสินค้าแล้ว
-        <form action='' method='POST'>
-        <input type='text' name='activateBill' value='".$buyid."' hidden>
-        <input type='submit' value='อนุมัติรายการ'>
+        <span class='badge bg-success me-2'>ชำระค่าสินค้าแล้ว</span>
+        <form action='' method='POST' class='d-inline'>
+        <input type='hidden' name='activateBill' value='" . htmlspecialchars($buyid, ENT_QUOTES, 'UTF-8') . "'>
+        <button type='submit' class='btn btn-success'>อนุมัติรายการ</button>
         </form> 
         
         ";
     }else {
         echo "
-        ชำระค่าสินค้าแล้ว <br>
-        อนุมัติรายการแล้ว
+        <span class='badge bg-success'>ชำระค่าสินค้าแล้ว</span>
+        <span class='badge bg-info'>อนุมัติรายการแล้ว</span>
         ";
     }
     if(isset($_POST['idtoupdate'])){
-        echo $oBj->payBill($buyid);
+        echo '<div class="alert alert-success mt-3">' . htmlspecialchars($oBj->payBill($buyid), ENT_QUOTES, 'UTF-8') . '</div>';
     }
     if(isset($_POST['activateBill'])){
-        echo $oBj->activateBill($buyid);
+        echo '<div class="alert alert-success mt-3">' . htmlspecialchars($oBj->activateBill($buyid), ENT_QUOTES, 'UTF-8') . '</div>';
     }
     echo "
-                        
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-</table>
+        </div>
+    </div>
+    </div>
 ";
 }else{
-    echo "fail";
+    echo "<div class='alert alert-danger'>เกิดข้อผิดพลาด</div>";
 }
-
+echo "</div></main></body></html>";
 ?>

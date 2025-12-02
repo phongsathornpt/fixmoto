@@ -8,9 +8,6 @@
     .bd-placeholder-img {
       font-size: 1.125rem;
       text-anchor: middle;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
       user-select: none;
     }
 
@@ -19,41 +16,42 @@
         font-size: 3.5rem;
       }
     }
+    .starter-template {
+      padding: 3rem 1.5rem;
+    }
   </style>
-  <!-- Custom styles for this template -->
-  <link href="//getbootstrap.com/docs/4.4/examples/starter-template/starter-template.css" rel="stylesheet">
     </head>
     <body>
 
 ';
-    echo '<main role="main" class="container">
+    $fix_id = isset($_GET['fix_id']) ? intval($_GET['fix_id']) : 0;
+    echo '<main role="main" class="container" style="margin-top: 60px;">
     <div class="starter-template">
-    <form method="get">
-    <table>
-    <tr>
-     <td> รหัสอะไหล่ </td>
-     <td> <input type="text" name="partnumber" required> </td>
-    </tr>  
-    <tr>
-        <td> <input type="text" name="fix_id" value="'.$_GET['fix_id'].'" hidden> </td>
-        <td>
-        <button type="submit" class="btn btn-success">เพิ่ม</button>
-    </table>
+    <h1>เพิ่มอะไหล่ที่ใช้</h1>
+    <form method="get" class="row g-3">
+        <div class="col-md-6">
+            <label for="partnumber" class="form-label">รหัสอะไหล่</label>
+            <input type="text" class="form-control" id="partnumber" name="partnumber" required>
+        </div>
+        <input type="hidden" name="fix_id" value="' . htmlspecialchars($fix_id, ENT_QUOTES, 'UTF-8') . '">
+        <div class="col-12">
+            <button type="submit" class="btn btn-success">เพิ่ม</button>
+        </div>
     </form>
     ';
     if(isset($_GET['partnumber'])){
         $partnumber = $_GET['partnumber'];
-        $fix_id = $_GET['fix_id'];
-        if(count($oBj->checkPartuse($partnumber)) == 1 ){
-            echo "อะไหล่ถูกใช้แล้ว";
-        }else if(count($oBj->checkPartuse($partnumber)) > 1 ){
-            echo $oBj->addFixuse($partnumber , $fix_id);
-            echo $oBj->setStatuspart($partnumber);
-            echo $oBj->updateStockfixuser($partnumber);
-            echo $oBj->changeStatusFix($fix_id , 2);
+        $fix_id = intval($_GET['fix_id']);
+        if(count($oBj->checkPartuse($partnumber)) == 0 ){
+            echo "<div class='alert alert-warning mt-3'>อะไหล่ถูกใช้แล้ว หรือไม่พบอะไหล่</div>";
+        }else if(count($oBj->checkPartuse($partnumber)) >= 1 ){
+            echo "<div class='alert alert-success mt-3'>" . htmlspecialchars($oBj->addFixuse($partnumber, $fix_id), ENT_QUOTES, 'UTF-8') . "</div>";
+            echo "<div class='alert alert-info mt-2'>" . htmlspecialchars($oBj->setStatuspart($partnumber), ENT_QUOTES, 'UTF-8') . "</div>";
+            echo "<div class='alert alert-info mt-2'>" . htmlspecialchars($oBj->updateStockfixuser($partnumber), ENT_QUOTES, 'UTF-8') . "</div>";
+            echo "<div class='alert alert-info mt-2'>" . htmlspecialchars($oBj->changeStatusFix($fix_id, 2), ENT_QUOTES, 'UTF-8') . "</div>";
         }else {
-            echo "มีปัญหา";
+            echo "<div class='alert alert-danger mt-3'>มีปัญหา</div>";
         }
-        //echo $oBj->addFixuse($_GET['partnumber'] , $_GET['fix_id']);
     }
+    echo "</div></main></body></html>";
 ?>
