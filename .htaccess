@@ -1,0 +1,11 @@
+RewriteEngine On
+
+# Redirect to public folder
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteRule ^(.*)$ /public/$1 [L]
+
+# Protect .env files
+<Files ".env">
+    Order allow,deny
+    Deny from all
+</Files>
