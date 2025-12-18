@@ -11,9 +11,6 @@
     .bd-placeholder-img {
       font-size: 1.125rem;
       text-anchor: middle;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
       user-select: none;
     }
 
@@ -22,39 +19,45 @@
         font-size: 3.5rem;
       }
     }
+    .starter-template {
+      padding: 3rem 1.5rem;
+    }
   </style>
-  <!-- Custom styles for this template -->
-  <link href="//getbootstrap.com/docs/4.4/examples/starter-template/starter-template.css" rel="stylesheet">
     </head>
     <body>
 
 ';
-    echo '<main role="main" class="container">
+    echo '<main role="main" class="container" style="margin-top: 60px;">
     <div class="starter-template">';
     include('template/menuPart.php');
     echo "
     <br>
-    <h1> รายการใบสั่งซื้อ </h1>
+    <h1>รายการใบสั่งซื้อ</h1>
         <hr>
-    <table border='0' width='500'>
+    <div class='table-responsive'>
+    <table class='table table-striped table-hover'>
+        <thead class='table-dark'>
         <tr>
-            <td>รหัส</td>
-            <td>ชื่อลูกค้า </td>
-            <td>วันที่ออก </td>
-            <td>มูลค่า</td>
-            <td>สถานะ</td>
+            <th>รหัส</th>
+            <th>ชื่อลูกค้า</th>
+            <th>วันที่ออก</th>
+            <th>มูลค่า</th>
+            <th>สถานะ</th>
         </tr>
+        </thead>
+        <tbody>
     ";
     for($i = 0 ; $i < count($listPo) ; $i++){
         $buy_ids = $listPo[$i]['buy_id'];
         echo "
         <tr>
-            <td> <a href='listPoDetail.php?buyid=". $buy_ids ."'> ". $buy_ids ." </a> </td>
-            <td> ". $listPo[$i]['supplier_desc'] ." </td>
-            <td> ". $listPo[$i]['buy_date'] ." </td>
-            <td> ". $oBj->costPo($buy_ids) ." </td>
-            <td> " . $oBj->getStatusPo($buy_ids) . " </td>
+            <td><a href='listPoDetail.php?buyid=" . htmlspecialchars($buy_ids, ENT_QUOTES, 'UTF-8') . "'>" . htmlspecialchars($buy_ids, ENT_QUOTES, 'UTF-8') . "</a></td>
+            <td>" . htmlspecialchars($listPo[$i]['supplier_desc'], ENT_QUOTES, 'UTF-8') . "</td>
+            <td>" . htmlspecialchars($listPo[$i]['buy_date'], ENT_QUOTES, 'UTF-8') . "</td>
+            <td>" . htmlspecialchars($oBj->costPo($buy_ids), ENT_QUOTES, 'UTF-8') . "</td>
+            <td>" . htmlspecialchars($oBj->getStatusPo($buy_ids), ENT_QUOTES, 'UTF-8') . "</td>
         </tr>
         ";
     }
+    echo "</tbody></table></div></div></main></body></html>";
 ?>

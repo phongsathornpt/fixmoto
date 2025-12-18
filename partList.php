@@ -9,9 +9,6 @@
     .bd-placeholder-img {
       font-size: 1.125rem;
       text-anchor: middle;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
       user-select: none;
     }
 
@@ -20,62 +17,64 @@
         font-size: 3.5rem;
       }
     }
+    .starter-template {
+      padding: 3rem 1.5rem;
+    }
   </style>
-  <!-- Custom styles for this template -->
-  <link href="//getbootstrap.com/docs/4.4/examples/starter-template/starter-template.css" rel="stylesheet">
     </head>
     <body>
 
 ';
-    echo '<main role="main" class="container">
+    echo '<main role="main" class="container" style="margin-top: 60px;">
     <div class="starter-template">';
     include('template/menuPart.php');
     echo "
     <br>
     <br>
-    <center>
-    <table width='800px;'>
+    <div class='table-responsive'>
+    <table class='table table-striped table-hover' style='max-width: 800px; margin: 0 auto;'>
+    <thead class='table-dark'>
     <tr>
-        <td>
+        <th>
             รหัส
-        </td>
-        <td>
+        </th>
+        <th>
             ชื่อสินค้า
-        </td>
-        <td>
+        </th>
+        <th>
             ราคาซื้อ
-        </td>
-        <td>
+        </th>
+        <th>
             ราคาขาย
-        </td>
-        <td>
+        </th>
+        <th>
             จำนวนคงเหลือ
-        </td>
-    </tr>         
+        </th>
+    </tr>
+    </thead>
+    <tbody>         
     " ;
-    for($i = 1 ; $i < count($data) ; $i++){
+    $dataCount = count($data);
+    for($i = 0 ; $i < $dataCount ; $i++){
         echo "
         <tr>
             <td>
-                " .$data[$i]['part_id']. "
+                " . htmlspecialchars($data[$i]['part_id'], ENT_QUOTES, 'UTF-8') . "
             </td>
             <td>
-                " .$data[$i]['part_desc']. "
+                " . htmlspecialchars($data[$i]['part_desc'], ENT_QUOTES, 'UTF-8') . "
             </td>
             <td>
-                " .$data[$i]['part_cost']. "
+                " . htmlspecialchars($data[$i]['part_cost'], ENT_QUOTES, 'UTF-8') . "
             </td>
             <td>
-                " .$data[$i]['part_price']. "
+                " . htmlspecialchars($data[$i]['part_price'], ENT_QUOTES, 'UTF-8') . "
             </td>
             <td>
-                " .$data[$i]['part_total']. "
+                " . htmlspecialchars($data[$i]['part_total'], ENT_QUOTES, 'UTF-8') . "
             </td>
         </tr>         
         " ;
     }
-    echo "</table>";
- //   echo "<pre>";
-   // print_r($data);
-    //  echo "</pre>";
+    echo "</tbody></table></div></div></main></body></html>";
 ?>

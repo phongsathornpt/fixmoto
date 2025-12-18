@@ -7,9 +7,6 @@
     .bd-placeholder-img {
       font-size: 1.125rem;
       text-anchor: middle;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
       user-select: none;
     }
 
@@ -18,9 +15,10 @@
         font-size: 3.5rem;
       }
     }
+    .starter-template {
+      padding: 3rem 1.5rem;
+    }
   </style>
-  <!-- Custom styles for this template -->
-  <link href="//getbootstrap.com/docs/4.4/examples/starter-template/starter-template.css" rel="stylesheet">
     </head>
     <body>
 
@@ -28,9 +26,9 @@
 include('template/menu.php');
 $buyid = 0;
 if(isset($_GET['fix_id'])){
-    $fix_id = $_GET['fix_id'];
+    $fix_id = intval($_GET['fix_id']);
     echo '
-<main role="main" class="container">
+<main role="main" class="container" style="margin-top: 60px;">
 
 <div class="starter-template">
 
@@ -39,92 +37,107 @@ if(isset($_GET['fix_id'])){
 <div class="starter-template">
 
 <h1>รายการซ่อม</h1>
-<center>
-<table width="800px">
+<div class="table-responsive">
+<table class="table table-striped table-hover" style="max-width: 800px; margin: 0 auto;">
+    <thead class="table-dark">
     <tr>
-        <td>หมายเลขงานซ่อม</td>
-        <td>หมายเลขลูกค้า</td>
-        <td>ยี่ห้อรถ</td>
-        <td>ป้ายทะเบียน</td>
-        <td>รายระเอียด</td>
-        <td>สถานะ</td>
+        <th>หมายเลขงานซ่อม</th>
+        <th>หมายเลขลูกค้า</th>
+        <th>ยี่ห้อรถ</th>
+        <th>ป้ายทะเบียน</th>
+        <th>รายระเอียด</th>
+        <th>สถานะ</th>
     </tr>
+    </thead>
+    <tbody>
 ';
 
 $datafix = $oBj->showFixlistbyid($fix_id);
 $fixDetail = $oBj->usePart($fix_id);
-for($i = 0; count($datafix) > $i ; $i++){
+if(!empty($datafix)){
+$datafixCount = count($datafix);
+for($i = 0; $i < $datafixCount ; $i++){
     $statusbyFixid = $oBj->getStatusbyfixid($datafix[$i]['fix_id']);
     echo "
     <tr>
-        <td> ".$datafix[$i]['fix_id']." </td>
-        <td> ".$datafix[$i]['customer_id']." </td>
-        <td> ".$datafix[$i]['brand']." </td>
-        <td> ".$datafix[$i]['plate']." </td>
-        <td> ".$datafix[$i]['fix_detail']." </td>
-        <td> ".$statusbyFixid[0]['fix_detail']." </td>
+        <td> " . htmlspecialchars($datafix[$i]['fix_id'], ENT_QUOTES, 'UTF-8') . " </td>
+        <td> " . htmlspecialchars($datafix[$i]['customer_id'], ENT_QUOTES, 'UTF-8') . " </td>
+        <td> " . htmlspecialchars($datafix[$i]['brand'], ENT_QUOTES, 'UTF-8') . " </td>
+        <td> " . htmlspecialchars($datafix[$i]['plate'], ENT_QUOTES, 'UTF-8') . " </td>
+        <td> " . htmlspecialchars($datafix[$i]['fix_detail'], ENT_QUOTES, 'UTF-8') . " </td>
+        <td> " . htmlspecialchars($statusbyFixid[0]['fix_detail'] ?? '', ENT_QUOTES, 'UTF-8') . " </td>
         
     </tr>
+    </tbody>
     </table>
+    </div>
     
     ";
 
     
 };
+}
 }else{
-    echo "<h1> เกิดข้อผิดพลาดกรุณาลองไหม่";
+    echo '<main role="main" class="container" style="margin-top: 60px;"><div class="starter-template"><div class="alert alert-danger">เกิดข้อผิดพลาดกรุณาลองไหม่</div></div>';
 }
 echo "
 <br>
     <hr>
     <h1>อะไหล่ที่ใช้</h1>
     <br>
-    <table width='800px'>
+    <div class='table-responsive'>
+    <table class='table table-striped table-hover' style='max-width: 800px; margin: 0 auto;'>
+      <thead class='table-dark'>
       <tr>
-        <td>
+        <th>
           หมายเลขอะไหล่
-        </td>
-        <td>
+        </th>
+        <th>
           อะไหล่
-        </td>
+        </th>
       </tr>
+      </thead>
+      <tbody>
 
 ";
 
 
-if(count($fixDetail) == 1){
-  echo "<h1>ยังไม่ได้อัพเดทรายการใช้อะไหล่";
+if(count($fixDetail) == 0){
+  echo "<tr><td colspan='2' class='text-center'>ยังไม่ได้อัพเดทรายการใช้อะไหล่</td></tr>";
 }else{
-  for($i = 1 ; count($fixDetail) > $i ; $i++){
+  $fixDetailCount = count($fixDetail);
+  for($i = 0 ; $i < $fixDetailCount ; $i++){
     echo "
     <tr>
       <td>
-        ".$fixDetail[$i]['part_number'] ."
+        " . htmlspecialchars($fixDetail[$i]['part_number'], ENT_QUOTES, 'UTF-8') . "
       </td>
       <td>
-        ".$fixDetail[$i]['part_desc'] ."
+        " . htmlspecialchars($fixDetail[$i]['part_desc'], ENT_QUOTES, 'UTF-8') . "
       </td>
     </tr>
     ";
   }
 }
 echo "    
+</tbody>
 </table>
-</center>
+</div>
 <br>";
 if($oBj->checkStatusFix($fix_id) != 'ซ่อมเรียบร้อย'){
-  echo "<a href='addusedPart.php?fix_id=".$fix_id."'> <button type='button' class='btn btn-primary'>เพิ่มอะไหล่ที่ใช้</button></a>";
+  echo "<a href='addusedPart.php?fix_id=" . htmlspecialchars($fix_id, ENT_QUOTES, 'UTF-8') . "' class='btn btn-primary me-2'>เพิ่มอะไหล่ที่ใช้</a>";
 }
 if($oBj->checkStatusFix($fix_id) == 'กำลังซ่อม'){
   echo "
-  <a href='changeFixStatus.php?fix_id=".$fix_id."&fix_status=3'><button type='button' class='btn btn-primary'>ซ่อมเรียบร้อยแล้วคลิกที่นี่</button></a>
+  <a href='changeFixStatus.php?fix_id=" . htmlspecialchars($fix_id, ENT_QUOTES, 'UTF-8') . "&fix_status=3' class='btn btn-success'>ซ่อมเรียบร้อยแล้วคลิกที่นี่</a>
   ";
 }else if($oBj->checkStatusFix($fix_id) == 'รอชำระ'){
   echo "
-  <a href='changeFixStatus.php?fix_id=".$fix_id."&fix_status=4'><button type='button' class='btn btn-primary'>ชำระเงินและรับรถเรียบร้อยคลิกที่นี่</button></a>
+  <a href='changeFixStatus.php?fix_id=" . htmlspecialchars($fix_id, ENT_QUOTES, 'UTF-8') . "&fix_status=4' class='btn btn-success'>ชำระเงินและรับรถเรียบร้อยคลิกที่นี่</a>
   ";
 }
 echo'
+</div>
 </main>
 </body>
 </html>

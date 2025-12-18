@@ -10,9 +10,6 @@
     .bd-placeholder-img {
       font-size: 1.125rem;
       text-anchor: middle;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
       user-select: none;
     }
 
@@ -21,79 +18,60 @@
         font-size: 3.5rem;
       }
     }
+    .starter-template {
+      padding: 3rem 1.5rem;
+    }
   </style>
-  <!-- Custom styles for this template -->
-  <link href="//getbootstrap.com/docs/4.4/examples/starter-template/starter-template.css" rel="stylesheet">
     </head>
     <body>
 
 ';
-    echo '<main role="main" class="container">
+    echo '<main role="main" class="container" style="margin-top: 60px;">
     <div class="starter-template">';
     include('template/menuPart.php');
     echo "
     <br>
-    <h1> สั่งซื้อ Part </h1>
+    <h1>สั่งซื้อ Part</h1>
         <br>
-        <form method='post'>
-        <table>
-            <tr>
-                <td>
-                    เลือก supplier   
-                </td>
-                <td>
-                    <select name='supplier'>           
+        <form method='post' class='row g-3'>
+            <div class='col-md-6'>
+                <label for='supplier' class='form-label'>เลือก supplier</label>
+                <select name='supplier' id='supplier' class='form-select'>           
     ";
                     for($i = 0 ; $i < count($data) ; $i++){
-                        echo "<option value='". $data[$i]['supplier_id'] ."'> ". $data[$i]['supplier_desc'] ." </option>";
+                        echo "<option value='" . htmlspecialchars($data[$i]['supplier_id'], ENT_QUOTES, 'UTF-8') . "'> " . htmlspecialchars($data[$i]['supplier_desc'], ENT_QUOTES, 'UTF-8') . " </option>";
                     }
-    echo " </select> <button type='submit' value='submit'>เลือก</button> </form></td> </tr>";
+    echo " </select></div><div class='col-md-6 d-flex align-items-end'><button type='submit' class='btn btn-primary'>เลือก</button></div></form>";
     if(isset($_POST["supplier"])){
         $sup_id = $_POST["supplier"];
         $dataProductbyid = $oBj->showBuyproduct($sup_id);
         echo "
-        <form method='get'>
-            <tr>
-                <td>
-                    วันที่ออก
-                </td>
-                <td>
-                    <input type='text' name='supplier' value='$sup_id' hidden>
-                    <input type='date' name='dateofbill' required>
-                </td>
-            </tr>
-            <tr>
-            <td>
-                วันที่จะชำระ
-            </td>
-            <td>
-                <input type='date' name='dateofpay' required>
-            </td>
-        </tr>
-            <tr>
-                <td>
-                    ชื่อสินค้า
-                </td>
-                <td>
-                    จำนวน
-                </td>
-            </tr>
+        <form method='get' class='row g-3 mt-3'>
+            <div class='col-md-6'>
+                <label for='dateofbill' class='form-label'>วันที่ออก</label>
+                <input type='hidden' name='supplier' value='" . htmlspecialchars($sup_id, ENT_QUOTES, 'UTF-8') . "'>
+                <input type='date' class='form-control' id='dateofbill' name='dateofbill' required>
+            </div>
+            <div class='col-md-6'>
+                <label for='dateofpay' class='form-label'>วันที่จะชำระ</label>
+                <input type='date' class='form-control' id='dateofpay' name='dateofpay' required>
+            </div>
+            <div class='col-12'>
+                <h5>รายการสินค้า</h5>
+            </div>
         ";
         for($i = 0 ; $i < count($dataProductbyid) ; $i++){
             echo "
-                <tr>
-                    <td>
-                         " . $dataProductbyid[$i]['part_desc'] . "
-                    </td>
-                    <td>
-                        <input type='number' name='amount".$i."' min='0' required>
-                    </td>
-                </tr>   
+            <div class='col-md-6'>
+                <label class='form-label'>" . htmlspecialchars($dataProductbyid[$i]['part_desc'], ENT_QUOTES, 'UTF-8') . "</label>
+                <input type='number' class='form-control' name='amount" . $i . "' min='0' placeholder='จำนวน' required>
+            </div>
             ";
         }
         echo "
-        </table>
-        <button type='submit' value='submit'>สั่งซื้อ</button>
+        <div class='col-12'>
+            <button type='submit' class='btn btn-success'>สั่งซื้อ</button>
+        </div>
         </form>
         ";
     }
@@ -102,12 +80,13 @@
         $dataProductbyid = $oBj->showBuyproduct($sup_id);
         $dateofbill = $_GET['dateofbill'];
         $dateofpay = $_GET['dateofpay'];
-        echo $oBj->addBuy($sup_id, $dateofbill, $dateofpay);
-        $buyid = $oBj->showBuyid(); //last buy id
+        echo '<div class="alert alert-info mt-3">' . htmlspecialchars($oBj->addBuy($sup_id, $dateofbill, $dateofpay), ENT_QUOTES, 'UTF-8') . '</div>';
+        $buyid = $oBj->showBuyid();
         for($ii = 0 ; $ii < count($dataProductbyid) ; $ii++){
             $prod_id = $dataProductbyid[$ii]['part_id'];
             $order_amout = $_GET['amount'.$ii];
-            echo $oBj->addBuydesc($buyid, $prod_id , $order_amout);
+            echo '<div class="alert alert-info">' . htmlspecialchars($oBj->addBuydesc($buyid, $prod_id, $order_amout), ENT_QUOTES, 'UTF-8') . '</div>';
         }
     }
+    echo "</div></main></body></html>";
 ?>
